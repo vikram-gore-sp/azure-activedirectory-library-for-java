@@ -19,7 +19,6 @@
  ******************************************************************************/
 package com.microsoft.aad.adal4j;
 
-import java.net.Proxy;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -41,13 +40,13 @@ class WSTrustRequest {
     private final static int MAX_EXPECTED_MESSAGE_SIZE = 1024;
     private final static String DEFAULT_APPLIES_TO = "urn:federation:MicrosoftOnline";    
     
-    static WSTrustResponse execute(String url, String username, String password, Proxy proxy)
+    static WSTrustResponse execute(String url, String username, String password)
             throws Exception {
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/soap+xml; charset=utf-8");
 
 
-        BindingPolicy policy = MexParser.getWsTrustEndpointFromMexEndpoint(url, proxy);
+        BindingPolicy policy = MexParser.getWsTrustEndpointFromMexEndpoint(url);
         String soapAction = "http://docs.oasis-open.org/ws-sx/ws-trust/200512/RST/Issue"; // default value (WSTrust 1.3)
 
         // only change it if version is wsTrust2005, otherwise default to wsTrust13
@@ -58,7 +57,7 @@ class WSTrustRequest {
 
         headers.put("SOAPAction", soapAction);
         String body = buildMessage(policy.getUrl(), username, password, policy.getVersion()).toString();
-        String response = HttpHelper.executeHttpPost(log, policy.getUrl(), body, headers, proxy);
+        String response = HttpHelper.executeHttpPost(log, policy.getUrl(), body, headers);
         return WSTrustResponse.parse(response, policy.getVersion());
     }
 

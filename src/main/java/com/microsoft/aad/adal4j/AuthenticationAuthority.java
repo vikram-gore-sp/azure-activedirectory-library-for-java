@@ -19,7 +19,6 @@
  ******************************************************************************/
 package com.microsoft.aad.adal4j;
 
-import java.net.Proxy;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Map;
@@ -63,8 +62,6 @@ class AuthenticationAuthority {
     private final URL authorityUrl;
     private final boolean validateAuthority;
 
-    private Proxy proxy;
-
     AuthenticationAuthority(final URL authorityUrl,
             final boolean validateAuthority) {
 
@@ -73,14 +70,6 @@ class AuthenticationAuthority {
         this.validateAuthority = validateAuthority;
         validateAuthorityUrl();
         setupAuthorityProperties();
-    }
-
-    public Proxy getProxy() {
-        return proxy;
-    }
-
-    public void setProxy(Proxy proxy) {
-        this.proxy = proxy;
     }
 
     String getHost() {
@@ -146,7 +135,8 @@ class AuthenticationAuthority {
 
     boolean doDynamicInstanceDiscovery(final Map<String, String> headers)
             throws Exception {
-        final String json = HttpHelper.executeHttpGet(log, instanceDiscoveryEndpoint, headers, proxy);
+        final String json = HttpHelper.executeHttpGet(log,
+                instanceDiscoveryEndpoint, headers);
         final InstanceDiscoveryResponse discoveryResponse = JsonHelper
                 .convertJsonToObject(json, InstanceDiscoveryResponse.class);
         return !StringHelper.isBlank(discoveryResponse

@@ -19,7 +19,6 @@
  ******************************************************************************/
 package com.microsoft.aad.adal4j;
 
-import java.net.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,8 +35,8 @@ class UserDiscoveryRequest {
         HEADERS.put("Accept", "application/json, text/javascript, */*");
         
     }
-    static UserDiscoveryResponse execute(final String uri, final Proxy proxy) throws Exception {
-        String response = HttpHelper.executeHttpGet(log, uri, HEADERS, proxy);
-        return JsonHelper.convertJsonToObject(response, UserDiscoveryResponse.class);
+    static UserDiscoveryResponse execute(String uri) throws Exception {
+       String response = HttpHelper.executeHttpGet(log, uri, HEADERS);
+       return JsonHelper.convertJsonToObject(response, UserDiscoveryResponse.class);
     }
 }

@@ -98,8 +98,7 @@ public class AuthenticationContextTest extends AbstractAdalTests {
                 EasyMock.isA(ClientAuthentication.class),
                 EasyMock.isA(ClientDataHttpHeaders.class)).andReturn(
                 new AuthenticationResult("bearer", "accessToken",
-                        "refreshToken", new Date().getTime(), "idToken", null,
-                        false));
+                        "refreshToken", new Date().getTime(), null, false));
         PowerMock.replay(ctx);
         Future<AuthenticationResult> result = ctx
                 .acquireTokenByAuthorizationCode("auth_code", new URI(
@@ -137,8 +136,7 @@ public class AuthenticationContextTest extends AbstractAdalTests {
                 EasyMock.isA(ClientAuthentication.class),
                 EasyMock.isA(ClientDataHttpHeaders.class)).andReturn(
                 new AuthenticationResult("bearer", "accessToken",
-                        "refreshToken", new Date().getTime(), "idToken", null,
-                        false));
+                        "refreshToken", new Date().getTime(), null, false));
         final KeyStore keystore = KeyStore.getInstance("PKCS12", "SunJSSE");
         keystore.load(
                 new FileInputStream(this.getClass()

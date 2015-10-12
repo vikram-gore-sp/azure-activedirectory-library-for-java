@@ -21,7 +21,6 @@ package com.microsoft.aad.adal4j;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.net.Proxy;
 import java.net.URI;
 import java.net.URL;
 import java.security.MessageDigest;
@@ -71,7 +70,6 @@ public class AuthenticationContext {
     private String authority;
     private final ExecutorService service;
     private final boolean validateAuthority;
-    private Proxy proxy;
 
     /**
      * Constructor to create the context with the address of the authority.
@@ -104,15 +102,6 @@ public class AuthenticationContext {
 
         authenticationAuthority = new AuthenticationAuthority(new URL(
                 this.getAuthority()), this.shouldValidateAuthority());
-    }
-
-    public Proxy getProxy() {
-        return proxy;
-    }
-
-    public void setProxy(Proxy proxy) {
-        this.proxy = proxy;
-        authenticationAuthority.setProxy(proxy);
     }
 
     private String canonicalizeUri(String authority) {
@@ -794,12 +783,13 @@ public class AuthenticationContext {
         ResourceOwnerPasswordCredentialsGrant grant = (ResourceOwnerPasswordCredentialsGrant) authGrant
                 .getAuthorizationGrant();
 
-        UserDiscoveryResponse discoveryResponse =
-                UserDiscoveryRequest.execute(this.authenticationAuthority.getUserRealmEndpoint(grant.getUsername()), proxy);
+        UserDiscoveryResponse discoveryResponse = UserDiscoveryRequest
+                .execute(this.authenticationAuthority
+                        .getUserRealmEndpoint(grant.getUsername()));
         if (discoveryResponse.isAccountFederated()) {
             WSTrustResponse response = WSTrustRequest.execute(discoveryResponse
                             .getFederationMetadataUrl(), grant.getUsername(),
-                    grant.getPassword().getValue(), proxy);
+                    grant.getPassword().getValue());
 
             AuthorizationGrant updatedGrant = null;
             if (response.isTokenSaml2()) {
